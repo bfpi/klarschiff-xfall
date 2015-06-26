@@ -35,7 +35,11 @@ module KSBackend
 
   def self.handle_response(response, response_class, only_one)
     begin
-      return response_class.new(JSON.parse(response)) if only_one
+      if only_one
+        obj = response_class.new
+        obj.update_attributes(JSON.parse(response))
+        return obj
+      end
 
       JSON.parse(response).map do |elem|
         if elem

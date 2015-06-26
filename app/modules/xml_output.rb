@@ -43,7 +43,13 @@ module XmlOutput
     return nil unless element.try(:__xmlattr)
     attrs = {}
     element.__xmlattr.each do |k, attr|
-      attrs[attr.name] = attr.value
+      if attr.is_a? Hash
+        attr.each do |k, v|
+          attrs[k] = v
+        end
+      else
+        attrs[attr.name] = attr.value
+      end
     end
     attrs
   end

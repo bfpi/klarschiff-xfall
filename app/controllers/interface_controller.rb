@@ -10,20 +10,11 @@ class InterfaceController < ApplicationController
 
     request = XmlInput.new(xmlContent)
 
-    # Es werden bei PARTIALAPPLICATION ebenfalls folgende Elemente ausgewertet:
-    #   Task
-    #   PartialApplication
-    #   Partner
-    #   Documents
-
-    # Uebermittlung eines Falls inklusive 1 bis n Antraegen.
+    # Uebermittlung eines Falls
     if request.action == "PARTIALAPPLICATION" && request.header.task == "I"
-      p request.backend_params
-      KSBackend.create_request(request.backend_params)
+      resp = KSBackend.create_request(request.backend_create_params)
+      return redirect_to action: :show, id: resp.id
     end
-
-
-
 
     return render xml: XmlOutput.new(request)
   end
@@ -31,9 +22,7 @@ class InterfaceController < ApplicationController
   def show
     request = KSBackend.request(params[:id])
 
-    p request.inspect
-
-    request.action = "MESSAGE"
+    request.action = "PARTIALAPPLICATION"
     output = XmlOutput.new(request)
 
     return render xml: output
