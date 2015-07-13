@@ -1,0 +1,1655 @@
+<?xml version= '1.0' encoding= 'UTF-8' ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fall="http://www.eu-dlr.org/x-eu-dlr.org/V2" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://www.eu-dlr.org/x-eu-dlr.org/V2">
+ <xs:element name="MainApplication">
+  <xs:annotation>
+   <xs:documentation>Fall</xs:documentation>
+  </xs:annotation>
+  <xs:complexType>
+   <xs:sequence>
+    <xs:element name="Action">
+     <xs:annotation>
+      <xs:documentation>Aktion die auf dem Fall ausgeführt werden soll</xs:documentation>
+     </xs:annotation>
+     <xs:simpleType>
+      <xs:restriction base="xs:string">
+       <xs:enumeration value="CONFIRMATIONOFRECEIPT">
+        <xs:annotation>
+         <xs:documentation>Lese- / Abrufbestaetigung eines Bescheid</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="DOCUMENTUPDATE">
+        <xs:annotation>
+         <xs:documentation>Aktualisierung eines Dokuments</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="ERROR">
+        <xs:annotation>
+         <xs:documentation>Rueckgabe eines fachlichen Fehlers bezgl. xFallformat- oder -Inhalten. Es werden lediglich die IDs der Objekte mitgeliefert, zu denen dieser Fehler aufgetreten ist (MainApplicationID, PartialApplicationID, etc.) - eine detaillierte Information ueber die Art des Fehlers wird nicht zurueckgegeben. Das Status-Element wird hierbei nicht beruecksichtigt.</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="MAINAPPLICATION">
+        <xs:annotation>
+         <xs:documentation>Lediglich Uebermittlung eines Falls z.B. zur Klaerung von Fragen und weiteren nicht antragsrelevanten Sachverhalten. Hierbei wird das Task-Element der MainApplication ausgewertet.</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="MESSAGE">
+        <xs:annotation>
+         <xs:documentation>Austausch einer Nachricht zwischen zwei Beteiligten. Task-Element der MainApplication und der jeweiligen PartialApplication wird nicht ausgewertet.</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="OFFICIALLETTER">
+        <xs:annotation>
+         <xs:documentation>Uebermittlung eines Bescheids zu einem Antrag. Task-Element der MainApplication und der jeweiligen PartialApplication wird nicht ausgewertet</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="PARTIALAPPLICATION">
+        <xs:annotation>
+         <xs:documentation>Uebermittlung eines Falls inklusive 1 bis n Antraegen. Hierbei wird das Task-Element der MainApplication, der jeweiligen PartialApplication, Partner und Documents zusaetzlich ausgewertet.</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="STATUSREQUEST">
+        <xs:annotation>
+         <xs:documentation>Anfrage zur Uebermittlung von Statusinformationen zu Antraegen und Dokumenten. Task-Element der MainApplication und der jeweiligen PartialApplication wird nicht ausgewertet.</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="STATUSRESPONSE">
+        <xs:annotation>
+         <xs:documentation>Antwort zur Uebermittlung von Statusinformationen zu Antraegen und Dokumenten. Task-Element der MainApplication und der jeweiligen PartialApplication wird nicht ausgewertet</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="READREQUEST">
+        <xs:annotation>
+         <xs:documentation>Anfrage zum Lesen von Fall- / Antragsdaten. In der Anfrage muessen lediglich die IDs der MainApplications / PartialApplications uebergeben werden, die man lesen moechte. Task-Element der MainApplication und der jeweiligen PartialApplication wird nicht ausgewertet.</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="READRESPONSE">
+        <xs:annotation>
+         <xs:documentation>Antwort zum Lesen von Fall- / Antragsdaten. In der Antwort werden Daten der angefragten MainApplications / PartialApplications uebergeben. Task-Element der MainApplication und der jeweiligen PartialApplication wird nicht ausgewertet</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+       <xs:enumeration value="REQUESTNEWDOCUMENT">
+        <xs:annotation>
+         <xs:documentation>Anforderung eines neuen, bisher noch nicht vorhandenen Dokuments.</xs:documentation>
+        </xs:annotation>
+       </xs:enumeration>
+      </xs:restriction>
+     </xs:simpleType>
+    </xs:element>
+    <xs:element name="Header" minOccurs="0">
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="Task" minOccurs="0">
+        <xs:annotation>
+         <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: C = Cancel, I = Insert, U = Update, D = Delete</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:enumeration value="I"/>
+          <xs:enumeration value="U"/>
+          <xs:enumeration value="D"/>
+          <xs:enumeration value="C"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="Note" minOccurs="0">
+        <xs:annotation>
+         <xs:documentation>Interne Anmerkungen zum Fall</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:maxLength value="1000"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="Status" minOccurs="0">
+        <xs:annotation>
+         <xs:documentation>Fallstatus</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:enumeration value="NEW">
+           <xs:annotation>
+            <xs:documentation>Fall ist eingegangen</xs:documentation>
+           </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="FORWARDED_TO_SPC">
+           <xs:annotation>
+            <xs:documentation>Weitergeleitet an anderen EA im Falle der Unzustaendigkeit des Fall-bearbeitenden EAs</xs:documentation>
+           </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="IN_PROGRESS">
+           <xs:annotation>
+            <xs:documentation>In Bearbeitung</xs:documentation>
+           </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="COMPLETE">
+           <xs:annotation>
+            <xs:documentation>Abgeschlossen</xs:documentation>
+           </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="REJECTED">
+           <xs:annotation>
+            <xs:documentation>Abgewiesen - etwa wenn Fall keine EU-DLR-relevanten Dienstleistungen betrifft</xs:documentation>
+           </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DELETED">
+           <xs:annotation>
+            <xs:documentation>Geloescht</xs:documentation>
+           </xs:annotation>
+          </xs:enumeration>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="ProcessType">
+        <xs:annotation>
+         <xs:documentation>Prozess Typ des Antrags, um eine unterschiedliche Verarbeitung von Antragsklassen (z.B. DLR oder anderen Servicebereichen) zu ermöglichen. Variety bietet die Möglichekeit, innerhalb eines Servicebereichs Unterscheidungen treffen zu können (z.B. Gruendung, Ummeldung).</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Type" type="xs:string"/>
+          <xs:element name="Variety" type="xs:string" minOccurs="0"/>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+      </xs:sequence>
+     </xs:complexType>
+    </xs:element>
+    <xs:element name="Data" minOccurs="0">
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="Name">
+        <xs:annotation>
+         <xs:documentation>Kurzbezeichnung des Falls</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:maxLength value="512"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="TypeOfActivity" minOccurs="0">
+        <xs:annotation>
+         <xs:documentation>Taetigkeit im Kontext der EG-DLR, welche mit diesem Fall verbunden ist.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Id" type="xs:string"/>
+          <xs:element name="Title" type="xs:string"/>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+       <xs:element name="Description">
+        <xs:annotation>
+         <xs:documentation>Beschreibung des Falles</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:maxLength value="256"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="MainReference" minOccurs="0">
+        <xs:annotation>
+         <xs:documentation>Aktenzeichen - Fuehrendes Aktenzeichen - durch EA zu befuellen</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:maxLength value="256"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+      </xs:sequence>
+     </xs:complexType>
+    </xs:element>
+    <xs:element name="Partner" minOccurs="0" maxOccurs="unbounded">
+     <xs:annotation>
+      <xs:documentation>Partner sind alle Personen und Organisationeinheiten, die an einem Fall beteiligt sind (EA, ZS, AS)</xs:documentation>
+     </xs:annotation>
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="Header" minOccurs="0">
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Task" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: I = Insert, U = Update, D = Delete, C = Current .</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:enumeration value="I"/>
+             <xs:enumeration value="U"/>
+             <xs:enumeration value="D"/>
+             <xs:enumeration value="C"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Note" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Interne Anmerkungen zum Partner</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="1000"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+       <xs:element name="Data" minOccurs="0">
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="PartnerType" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Geschäftspartnertyp (Person, Organisation)</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:enumeration value="PERSON"/>
+             <xs:enumeration value="ORGANISATION"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="PartnerLanguage" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Sprache nach ISO 639-2 - 3-Zeichen-Code</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="3"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="FormOfAddress" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Anredeschlüssel (FEMALE = Frau, MALE = Herr, COMPANY = Firma, ORGANISATION = Organisation)</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:enumeration value="FEMALE"/>
+             <xs:enumeration value="MALE"/>
+             <xs:enumeration value="COMPANY"/>
+             <xs:enumeration value="ORGANISATION"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="AcademicTitle" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Akademischer Grad und akademischer Titel</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="64"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="FirstName" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Vorname des Geschäftspartners (Person)</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="256"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="LastName" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Nachname des Geschäftspartners (Person)</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="256"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="OrgName" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Name der Organisation - Bsp: Gewerbeamt Heidelberg</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="256"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Annex" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Zusatz zur Organisationsbezeichnung - Bsp: Niederlassung XYZ oder Nebengebäude 123</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="1000"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:sequence>
+           <xs:element name="Address" minOccurs="0">
+            <xs:complexType>
+             <xs:sequence>
+              <xs:element name="Street" minOccurs="0">
+               <xs:annotation>
+                <xs:documentation>Strasse</xs:documentation>
+               </xs:annotation>
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:maxLength value="256"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+              <xs:element name="HouseNo" minOccurs="0">
+               <xs:annotation>
+                <xs:documentation>Hausnummer</xs:documentation>
+               </xs:annotation>
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:maxLength value="10"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+              <xs:element name="PostalCode" minOccurs="0">
+               <xs:annotation>
+                <xs:documentation>Postleitzahl des Orts</xs:documentation>
+               </xs:annotation>
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:maxLength value="10"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+              <xs:element name="POBPostalCode" minOccurs="0">
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:maxLength value="10"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+              <xs:element name="PostOfficeBox" minOccurs="0">
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:maxLength value="10"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+              <xs:element name="City" minOccurs="0">
+               <xs:annotation>
+                <xs:documentation>Ort</xs:documentation>
+               </xs:annotation>
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:maxLength value="256"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+              <xs:element name="Country" minOccurs="0">
+               <xs:annotation>
+                <xs:documentation>ISO-Code des Landes</xs:documentation>
+               </xs:annotation>
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:maxLength value="2"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+             </xs:sequence>
+            </xs:complexType>
+           </xs:element>
+          </xs:sequence>
+          <xs:sequence>
+           <xs:element name="Contact" minOccurs="0">
+            <xs:complexType>
+             <xs:sequence>
+              <xs:element name="TelNo" minOccurs="0" maxOccurs="unbounded">
+               <xs:annotation>
+                <xs:documentation>Vollständige Telefonummer: Laenderkennzeichen+Vorwahl+Anschluß+Durchwahl</xs:documentation>
+               </xs:annotation>
+               <xs:complexType>
+                <xs:simpleContent>
+                 <xs:extension base="xs:string">
+                  <xs:attribute name="Preferred" type="xs:boolean" use="optional">
+                   <xs:annotation>
+                    <xs:documentation>TRUE: Telefonnumer unter der der Partner paeferiert erreicht werden moechte.</xs:documentation>
+                   </xs:annotation>
+                  </xs:attribute>
+                 </xs:extension>
+                </xs:simpleContent>
+               </xs:complexType>
+              </xs:element>
+              <xs:element name="MobileNo" minOccurs="0" maxOccurs="unbounded">
+               <xs:annotation>
+                <xs:documentation>Vollständige Mobilnummer: Laenderkennzeichen+Vorwahl+Anschluß+Durchwahl</xs:documentation>
+               </xs:annotation>
+               <xs:complexType>
+                <xs:simpleContent>
+                 <xs:extension base="xs:string">
+                  <xs:attribute name="Preferred" type="xs:boolean" use="optional">
+                   <xs:annotation>
+                    <xs:documentation>TRUE: Mobilnummer unter der der Partner paeferiert erreicht werden moechte.</xs:documentation>
+                   </xs:annotation>
+                  </xs:attribute>
+                 </xs:extension>
+                </xs:simpleContent>
+               </xs:complexType>
+              </xs:element>
+              <xs:element name="FaxNo" minOccurs="0" maxOccurs="unbounded">
+               <xs:annotation>
+                <xs:documentation>Vollständige Faxnummer: Laenderkennzeichen+Vorwahl+Anschluß+Durchwahl</xs:documentation>
+               </xs:annotation>
+               <xs:complexType>
+                <xs:simpleContent>
+                 <xs:extension base="xs:string">
+                  <xs:attribute name="Preferred" type="xs:boolean" use="optional">
+                   <xs:annotation>
+                    <xs:documentation>TRUE: Faxnummer unter der der Partner paeferiert erreicht werden moechte.</xs:documentation>
+                   </xs:annotation>
+                  </xs:attribute>
+                 </xs:extension>
+                </xs:simpleContent>
+               </xs:complexType>
+              </xs:element>
+              <xs:element name="Email" minOccurs="0" maxOccurs="unbounded">
+               <xs:annotation>
+                <xs:documentation>Email</xs:documentation>
+               </xs:annotation>
+               <xs:complexType>
+                <xs:sequence>
+                 <xs:element name="Address">
+                  <xs:annotation>
+                   <xs:documentation>Email-Adresse</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                   <xs:restriction base="xs:string">
+                    <xs:maxLength value="256"/>
+                   </xs:restriction>
+                  </xs:simpleType>
+                 </xs:element>
+                 <xs:element name="PublicKey" minOccurs="0">
+                  <xs:annotation>
+                   <xs:documentation>Oeffentlicher Schluessel fuer Mail-Verschluesselung</xs:documentation>
+                  </xs:annotation>
+                  <xs:simpleType>
+                   <xs:restriction base="xs:string">
+                    <xs:maxLength value="2048"/>
+                   </xs:restriction>
+                  </xs:simpleType>
+                 </xs:element>
+                </xs:sequence>
+                <xs:attribute name="Preferred" type="xs:boolean" use="optional">
+                 <xs:annotation>
+                  <xs:documentation>TRUE: Email-Adresse unter der der Partner paeferiert erreicht werden moechte.</xs:documentation>
+                 </xs:annotation>
+                </xs:attribute>
+               </xs:complexType>
+              </xs:element>
+              <xs:element name="SignatureApplication" minOccurs="0" maxOccurs="unbounded">
+               <xs:annotation>
+                <xs:documentation>Signatur-Anwendung (z.B. VPS)</xs:documentation>
+               </xs:annotation>
+               <xs:complexType>
+                <xs:sequence>
+                 <xs:element name="ClientType" type="xs:string"/>
+                 <xs:element name="ReceiverID" type="xs:string"/>
+                </xs:sequence>
+                <xs:attribute name="Preferred" type="xs:boolean" use="optional">
+                 <xs:annotation>
+                  <xs:documentation>TRUE: Signatur-Anwendung unter der der Partner paeferiert erreicht werden moechte.</xs:documentation>
+                 </xs:annotation>
+                </xs:attribute>
+               </xs:complexType>
+              </xs:element>
+              <xs:element name="Other" type="xs:anyType" minOccurs="0" maxOccurs="unbounded"/>
+              <xs:element name="PreferredContact">
+               <xs:annotation>
+                <xs:documentation>Zugangsweg, ueber den der Partner praeferiert zu erreichen ist. Da ueber diesen Kanal auch der Versandt von Dokumenten moeglich sein muss, koennen hier lediglich Postzustellung, Fax, Email, ein psersoenlicher Portalbereich sowie der SignaturClient ausgewaehlt werden.</xs:documentation>
+               </xs:annotation>
+               <xs:simpleType>
+                <xs:restriction base="xs:string">
+                 <xs:enumeration value="POSTAL"/>
+                 <xs:enumeration value="EMAIL"/>
+                 <xs:enumeration value="SIGNATURECLIENT"/>
+                 <xs:enumeration value="FAX"/>
+                 <xs:enumeration value="PORTAL"/>
+                </xs:restriction>
+               </xs:simpleType>
+              </xs:element>
+             </xs:sequence>
+            </xs:complexType>
+           </xs:element>
+          </xs:sequence>
+          <xs:element name="Other" type="xs:anyType" minOccurs="0" maxOccurs="1"/>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Id" use="required">
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="36"/>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:attribute>
+     </xs:complexType>
+    </xs:element>
+    <xs:element name="Document" minOccurs="0" maxOccurs="unbounded">
+     <xs:annotation>
+      <xs:documentation>Dokumente, die in unterschiedllichen PartialApplications mehrfach verwendet werden, koennen hier global definiert werden. Vorteil: Aendert sich ein globales Dokument, muss es lediglich einmalig und nicht je PartialApplication ausgetauscht werden. Die Referenzierung des Documents-Elements der PartialApplication erfolgt durch das Setzten der DocumentID des globalen Dokuments im Element RefDocumentID. Der Dokumentenstatus wird je Antrag gepflegt, in dem ein globales Dokument verwendet wird</xs:documentation>
+     </xs:annotation>
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="Header" minOccurs="0">
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Task" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: I = Insert, U = Update, D = Delete</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:enumeration value="I"/>
+             <xs:enumeration value="U"/>
+             <xs:enumeration value="D"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Note" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Interne Anmerkung zum Document</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="1000"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="External" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Daten falls Dokumente im Anhang der Nachricht angehaengt werden</xs:documentation>
+           </xs:annotation>
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="HashAlgorithm"/>
+             <xs:element name="HashValue"/>
+            </xs:sequence>
+           </xs:complexType>
+          </xs:element>
+          <xs:element name="Signature" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Das optionale Signature Element wird für die Hinterlegung von Dokumentensignaturen verwendet. Handelt es sich um eine inline PDF Signatur, so wird der SignatureType INLINE verwendet. Handelt es sich um eine externe Signatur, so ist diese zusammen mit dem Type base64 codiert im Base64Signature Element zu hinterlegen und als SignatureType DETACHED zu waehlen.</xs:documentation>
+           </xs:annotation>
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="Base64Signature" minOccurs="0">
+              <xs:complexType>
+               <xs:simpleContent>
+                <xs:extension base="xs:base64Binary">
+                 <xs:attribute name="Type" type="xs:anyURI"/>
+                </xs:extension>
+               </xs:simpleContent>
+              </xs:complexType>
+             </xs:element>
+             <xs:element name="SignaturePolicyIdentifier" type="xs:anyURI"/>
+            </xs:sequence>
+            <xs:attribute name="SignatureType" use="required">
+             <xs:annotation>
+              <xs:documentation>Siganturtyp, also inlinePDF oder externe Signatur.</xs:documentation>
+             </xs:annotation>
+             <xs:simpleType>
+              <xs:restriction base="xs:string">
+               <xs:enumeration value="INLINE">
+                <xs:annotation>
+                 <xs:documentation>Inline PDF Signatur</xs:documentation>
+                </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="DETACHED">
+                <xs:annotation>
+                 <xs:documentation>Externe Sigantur</xs:documentation>
+                </xs:annotation>
+               </xs:enumeration>
+              </xs:restriction>
+             </xs:simpleType>
+            </xs:attribute>
+           </xs:complexType>
+          </xs:element>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+       <xs:element name="Data" minOccurs="0">
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Name">
+           <xs:annotation>
+            <xs:documentation>Bezeichnung des Dokuments</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="128"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Filename" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Bezeichnung der uebermittelten Datei</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="128"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="ContentType" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Auch bezeichnet als Internet Media Type. Klassifikation der Daten im Content-Element</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="128"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Content" type="xs:base64Binary" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Binaerdaten des Documents. Element ist optional, um Informationen ueber beizubringende Dokumente uebermitteln zu koennen, unabhaengig davon, ob fuer dieses bereits entsprechender Content vorliegt.</xs:documentation>
+           </xs:annotation>
+          </xs:element>
+          <xs:element name="SchemaType" type="xs:anyURI" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Falls XML oder sonstige Konvention geliefert wird, wird hier definiert, um welches Schema (xGewerbe, DATML/RAW) es sich handelt.</xs:documentation>
+           </xs:annotation>
+          </xs:element>
+          <xs:element name="XMLRepresentation" type="xs:base64Binary" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>XML Repräsentation des Dokumenteninhaltes. Das Element ist optional, da nicht jedes Dokument zwangsweise über eine XML Datenrepräsentation verfügt.</xs:documentation>
+           </xs:annotation>
+          </xs:element>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Id" use="required">
+       <xs:annotation>
+        <xs:documentation>Primaerschluessel des Dokuments</xs:documentation>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="36"/>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="Type" use="required">
+       <xs:annotation>
+        <xs:documentation>Antragsdokument, Beizubringendes Dokument oder nur fuer nachgelagerte Weiterverarbeitung</xs:documentation>
+       </xs:annotation>
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:enumeration value="APPLICATION">
+          <xs:annotation>
+           <xs:documentation>Antragsdokument</xs:documentation>
+          </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="DOCUMENT">
+          <xs:annotation>
+           <xs:documentation>Beizubringendes Dokument</xs:documentation>
+          </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="FORFURTHERPROCESS">
+          <xs:annotation>
+           <xs:documentation>Fuer eine nachgelagerte Weiterverarbeitung</xs:documentation>
+          </xs:annotation>
+         </xs:enumeration>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="ExternalDocument" type="xs:boolean" use="required">
+       <xs:annotation>
+        <xs:documentation>Markierung, ob Dokument separat als Anhang mitgefuehrt wird oder inline in xFall über die Dokumenten-Elemente 'ContentType' und 'Content' zur Verfuegung gestellt wird</xs:documentation>
+       </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="Template" type="xs:string"/>
+      <xs:attribute name="ExternalDocumentId" type="xs:string"/>
+     </xs:complexType>
+    </xs:element>
+    <xs:element name="PartialApplication" minOccurs="0" maxOccurs="unbounded">
+     <xs:annotation>
+      <xs:documentation>Verwaltungsverfahren (Antrag)</xs:documentation>
+     </xs:annotation>
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="Header" minOccurs="0">
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Task" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: C = Cancel, I = Insert, U = Update, D = Delete</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:enumeration value="I"/>
+             <xs:enumeration value="U"/>
+             <xs:enumeration value="D"/>
+             <xs:enumeration value="C"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Note" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Interne Anmerkungen zum Verwaltungsverfahren</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="1000"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Status" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Antragsstatus</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:enumeration value="NEW">
+              <xs:annotation>
+               <xs:documentation>Neuer Antrag eingegangen</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="REFUSED">
+              <xs:annotation>
+               <xs:documentation>Abgewiesen - etwa wenn Antrag keine EU-DLR-relevanten Dienstleistungen betrifft</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="FORWARDED_TO_SPC">
+              <xs:annotation>
+               <xs:documentation>Weitergeleitet an anderen EA, im Falle der Unzuständigkeit eines EA fuer einen Einzelantrags eines Falls</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="INSPECTION_SPC">
+              <xs:annotation>
+               <xs:documentation>Antrag in Sichtung durch EA</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="INCORRECT_SPC">
+              <xs:annotation>
+               <xs:documentation>Antrag fehlerhaft (EA) (Zwischenstatus, wenn bereits in einzelnen Dokumenten Fehler identifiziert wurden, jedoch noch nicht alle Dokumente grprueft wurden)</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="FORWARDED_TO_AUTHORITY">
+              <xs:annotation>
+               <xs:documentation>Weitergeleitet an Zuständige Stelle</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="INCORRECT_AUTHORITY">
+              <xs:annotation>
+               <xs:documentation>Antrag fehlerhaft (ZS)</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="INPROGRESS_AUTHORITY">
+              <xs:annotation>
+               <xs:documentation>Antrag in Bearbeitung durch ZS</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="APPROVED">
+              <xs:annotation>
+               <xs:documentation>Antrag positiv beschieden</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="PARTLY_APPROVED">
+              <xs:annotation>
+               <xs:documentation>Antrag wurde teilweise positiv beschieden (juristisch: Positiv beschieden mit Auflagen)</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="APPROVED_WITH_RESERVATION">
+              <xs:annotation>
+               <xs:documentation>Antrag wurde positiv beschieden mit Bedingungen</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="REJECTED">
+              <xs:annotation>
+               <xs:documentation>Antrag abgelehnt</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="EXECUTED">
+              <xs:annotation>
+               <xs:documentation>Ausgefuehrt (Für Antraege, in denen kein Bescheid erzeugt wird, z.B. Gewerbenanzeige )</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="NOTE_OF_APPROVAL">
+              <xs:annotation>
+               <xs:documentation>Beschieden durch Genehmigungsfiktion</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="DISPATCHED">
+              <xs:annotation>
+               <xs:documentation>Bescheid versandt an Antragsteller - Antragsteller hat den Bescheid noch nicht erhalten</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="DELIVERED">
+              <xs:annotation>
+               <xs:documentation>Zugestellt (Antrag erhaelt diesen Status, wenn sich Bescheiddokument im Status "DELIVERED" befindet)</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="CANCELED">
+              <xs:annotation>
+               <xs:documentation>Antrag wurde abgebrochen</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="DELETED">
+              <xs:annotation>
+               <xs:documentation>Antrag wurde geloescht</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="OfficialLetterRequired" type="xs:boolean" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>TRUE: Es handelt sich um einen Antrag, der einen Bescheid erfordert - FALSE: Es handelt sich um eine Anzeige, aus der kein Bescheid resultiert</xs:documentation>
+           </xs:annotation>
+          </xs:element>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+       <xs:element name="Data" minOccurs="0">
+        <xs:annotation>
+         <xs:documentation>Antragsdaten</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="ParentPartialApplicationID" minOccurs="0" maxOccurs="unbounded">
+           <xs:annotation>
+            <xs:documentation>ID der PartialApplication, die als vorgreifliches Verfahren für die aktuelle Leistung benötigt wird (Abbildung Verfahrensreihenfolge)</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="36"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="PartialReference" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Aktenzeichen der Zustaendigen Stellen</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="256"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="PublicServiceTypeID" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>ID der Verwaltungsleistung nach LeiKa - Datentyp der LeiKa-ID steht derzeit noch nicht fest - ggf. ist Änderunge des Datentyps erforderlich</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="36"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="PublicServiceType" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Kurzbezeichnung Verwaltungsleistung</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="256"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="Description" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Leistungsbeschreibung</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="1000"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="TimeLimit" type="xs:int" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Bearbeitungsfrist in Tagen</xs:documentation>
+           </xs:annotation>
+          </xs:element>
+          <xs:element name="PartnerFunction" minOccurs="0" maxOccurs="unbounded">
+           <xs:annotation>
+            <xs:documentation>Zuweisung eines Partners zum Antrag sowie Beschreibung seiner Rolle im Antrangsprozess</xs:documentation>
+           </xs:annotation>
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="Header">
+              <xs:complexType>
+               <xs:sequence>
+                <xs:element name="Task">
+                 <xs:annotation>
+                  <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: I = Insert, U = Update, D = Delete</xs:documentation>
+                 </xs:annotation>
+                 <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                   <xs:enumeration value="I"/>
+                   <xs:enumeration value="U"/>
+                   <xs:enumeration value="D"/>
+                   <xs:enumeration value="C"/>
+                  </xs:restriction>
+                 </xs:simpleType>
+                </xs:element>
+                <xs:element name="Note" minOccurs="0">
+                 <xs:annotation>
+                  <xs:documentation>Interne Anmerkung zum Document</xs:documentation>
+                 </xs:annotation>
+                 <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                   <xs:maxLength value="1000"/>
+                  </xs:restriction>
+                 </xs:simpleType>
+                </xs:element>
+               </xs:sequence>
+              </xs:complexType>
+             </xs:element>
+             <xs:element name="Data">
+              <xs:complexType>
+               <xs:sequence>
+                <xs:element name="PartnerID">
+                 <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                   <xs:maxLength value="36"/>
+                  </xs:restriction>
+                 </xs:simpleType>
+                </xs:element>
+                <xs:element name="PartnerRole">
+                 <xs:annotation>
+                  <xs:documentation>Art des Partners (APPLICANT = Antragsteller; SPC = Einheitlicher Ansprechpartner; AUTHORITY = Zustaendige Stelle; FUTHER_AUTHORITY = Weitere Stelle, die im Rahmen des Antragsprozesses eingebunden werden kann</xs:documentation>
+                 </xs:annotation>
+                 <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                   <xs:enumeration value="APPLICANT">
+                    <xs:annotation>
+                     <xs:documentation>Antragsteller</xs:documentation>
+                    </xs:annotation>
+                   </xs:enumeration>
+                   <xs:enumeration value="SPC">
+                    <xs:annotation>
+                     <xs:documentation>SPC = Single Point of Contact --&gt; Einheitlicher Ansprechpartner</xs:documentation>
+                    </xs:annotation>
+                   </xs:enumeration>
+                   <xs:enumeration value="AUTHORITY">
+                    <xs:annotation>
+                     <xs:documentation>Zustaendige Stelle</xs:documentation>
+                    </xs:annotation>
+                   </xs:enumeration>
+                   <xs:enumeration value="FUTHER_AUTHORITY">
+                    <xs:annotation>
+                     <xs:documentation>Weitere Stelle, die in den Prozess miteinbegzogen wird. Bsp.: Einbeziehung des Hygieneamts im Rahmen einer Gaststaettenerlaubnis</xs:documentation>
+                    </xs:annotation>
+                   </xs:enumeration>
+                  </xs:restriction>
+                 </xs:simpleType>
+                </xs:element>
+                <xs:element name="PartnerStatus" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="PartnerContact" minOccurs="0" maxOccurs="unbounded">
+                 <xs:complexType>
+                  <xs:sequence>
+                   <xs:element name="PartnerID" type="xs:string"/>
+                  </xs:sequence>
+                  <xs:attribute name="Preferred" type="xs:boolean" use="required"/>
+                 </xs:complexType>
+                </xs:element>
+               </xs:sequence>
+              </xs:complexType>
+             </xs:element>
+            </xs:sequence>
+           </xs:complexType>
+          </xs:element>
+          <xs:element name="ReferredDocument" minOccurs="0" maxOccurs="unbounded">
+           <xs:annotation>
+            <xs:documentation>Referenz auf ein im Bereich 'Document' dekaliertes Dokument, das innerhalb des aktuellen Antrags benoetigt wird</xs:documentation>
+           </xs:annotation>
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="Status" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Dokumentenstatus</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:enumeration value="UNCHECKED">
+                 <xs:annotation>
+                  <xs:documentation>Neues, ungepueftes Dokument / neue ungepruefte Dokumentenversion</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="CORRECT_SPC">
+                 <xs:annotation>
+                  <xs:documentation>Vollstaendigkeit und Korrektheit des Dokuments durch EA festgestellt</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="INVALID_SPC">
+                 <xs:annotation>
+                  <xs:documentation>Ungueltigkeit des Dokuments durch EA festgestellt, z.B. nicht beglaubigt, unlesbar</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="INCOMPLETE_SPC">
+                 <xs:annotation>
+                  <xs:documentation>Unvollstaendigkeit durch EA festgestellt</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="INCORRECT_DOC_SPC">
+                 <xs:annotation>
+                  <xs:documentation>Falsches Dokument (durch EA festgestellt))</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="CORRECT_AUTHORITY">
+                 <xs:annotation>
+                  <xs:documentation>Vollstaendigkeit und Korrektheit des Dokuments durch ZS festgestellt</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="INVALID_AUTHORITY">
+                 <xs:annotation>
+                  <xs:documentation>Ungueltigkeit des Dokuments durch ZS festgestellt, z.B. nicht beglaubigt, unlesbar</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="INCOMPLETE_AUTHORITY">
+                 <xs:annotation>
+                  <xs:documentation>Unvollstaendigkeit durch ZS festgestellt</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="INCORRECT_DOC_AUTHORITY">
+                 <xs:annotation>
+                  <xs:documentation>Falsches Dokument (durch ZS festgestellt))</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="MISSING">
+                 <xs:annotation>
+                  <xs:documentation>Dokument fehlt. Relevant für die Uebergabe der Information, dass ein bestimmtes Dokument benoetigt, jedoch noch nicht durch den Antragsteller geliefert wurde</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="REJECTED_BY_APPLICANT">
+                 <xs:annotation>
+                  <xs:documentation>Hiermit transportiert der Antragsteller die Aussage, dass er das uebermittelte Dokument gar nicht einreichen möchte. Dieser Fall ergibt sich u.a., wenn ein Antragsassistent stets alle Dokumente aller moeglichen Auspraegungen eines Verfahrens uebersendet. Beispiel Gaststaettenerlaubnis: es werden vom Antragsassistenten immer alle denkbaren Gaststaetten-Antraege uebermittelt, so z.B. Erlaubnis zum Aufstellen von Spielautomaten etc. Dieser Status markiert, dass uebergebene Dokument als nicht relevant für den Fall - folglich ist der Content-Bereich des Dokuments immer leer - lediglich die Info, dass ein solcher Antrag moeglich ist wird uebermittelt.</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Id" use="required">
+             <xs:annotation>
+              <xs:documentation>DocumentID des zu referenzierenden Dokuments</xs:documentation>
+             </xs:annotation>
+             <xs:simpleType>
+              <xs:restriction base="xs:string">
+               <xs:maxLength value="36"/>
+              </xs:restriction>
+             </xs:simpleType>
+            </xs:attribute>
+           </xs:complexType>
+          </xs:element>
+          <xs:element name="CustomData" type="xs:base64Binary" minOccurs="0"/>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+       <xs:element name="OfficialLetter" minOccurs="0">
+        <xs:annotation>
+         <xs:documentation>Antragsbescheid</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Header" minOccurs="0">
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="Task" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: I = Insert, U = Update, D = Delete</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:enumeration value="I"/>
+                <xs:enumeration value="U"/>
+                <xs:enumeration value="D"/>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+             <xs:element name="Note" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Interne Anmerkungen zum Bescheid</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:maxLength value="1000"/>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+            </xs:sequence>
+           </xs:complexType>
+          </xs:element>
+          <xs:element name="Data" minOccurs="0">
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="Decision" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Ergebnis des Antrags</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:enumeration value="APPROVED">
+                 <xs:annotation>
+                  <xs:documentation>Antrag positiv beschieden</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="PARTLY_APPROVED">
+                 <xs:annotation>
+                  <xs:documentation>Antrag wurde teilweise positiv beschieden (juristisch: Positiv beschieden mit Auflagen)</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="APPROVED_WITH_RESERVATION">
+                 <xs:annotation>
+                  <xs:documentation>Antrag wurde positiv beschieden mit Bedingungen</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="REJECTED">
+                 <xs:annotation>
+                  <xs:documentation>Antrag abgelehnt</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="EXECUTED">
+                 <xs:annotation>
+                  <xs:documentation>Ausgefuehrt (Für Antraege, in denen kein Bescheid erzeugt wird, z.B. Gewerbenanzeige )</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="NOTE_OF_APPROVAL">
+                 <xs:annotation>
+                  <xs:documentation>Bewilligt durch Genehmigungsfiktion</xs:documentation>
+                 </xs:annotation>
+                </xs:enumeration>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+             <xs:element name="DecisionDate" type="xs:date" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Datum des Bescheids</xs:documentation>
+              </xs:annotation>
+             </xs:element>
+             <xs:element name="Charge" type="xs:decimal" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Gesamtgebuehr</xs:documentation>
+              </xs:annotation>
+             </xs:element>
+             <xs:element name="Document" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+               <xs:documentation>Bescheiddokumente inkl. Gebuehrenbescheide. Dokumente sind optional, da es nicht alle Verfahren einen Bescheid als Ergebnisdokumente produzieren (Bsp. Gwerbeanmeldung)</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+               <xs:sequence>
+                <xs:element name="Header" minOccurs="0">
+                 <xs:complexType>
+                  <xs:sequence>
+                   <xs:element name="Task" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: I = Insert, U = Update, D = Delete</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                     <xs:restriction base="xs:string">
+                      <xs:enumeration value="I"/>
+                      <xs:enumeration value="U"/>
+                      <xs:enumeration value="D"/>
+                     </xs:restriction>
+                    </xs:simpleType>
+                   </xs:element>
+                   <xs:element name="Note" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>Interne Anmerkung zum Document</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                     <xs:restriction base="xs:string">
+                      <xs:maxLength value="1000"/>
+                     </xs:restriction>
+                    </xs:simpleType>
+                   </xs:element>
+                   <xs:element name="External" minOccurs="0">
+                    <xs:complexType>
+                     <xs:sequence>
+                      <xs:element name="HashAlgorithm"/>
+                      <xs:element name="HashValue"/>
+                     </xs:sequence>
+                    </xs:complexType>
+                   </xs:element>
+                   <xs:element name="Status" minOccurs="0">
+                    <xs:simpleType>
+                     <xs:restriction base="xs:string">
+                      <xs:enumeration value="CREATED">
+                       <xs:annotation>
+                        <xs:documentation>Bescheid wurde erstellt</xs:documentation>
+                       </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="DISPATCHED">
+                       <xs:annotation>
+                        <xs:documentation>Versand an Antragsteller - Antragsteller hat den Bescheid noch nicht erhalten</xs:documentation>
+                       </xs:annotation>
+                      </xs:enumeration>
+                      <xs:enumeration value="DELIVERED">
+                       <xs:annotation>
+                        <xs:documentation>Bescheid wurde zugestellt</xs:documentation>
+                       </xs:annotation>
+                      </xs:enumeration>
+                     </xs:restriction>
+                    </xs:simpleType>
+                   </xs:element>
+                   <xs:element name="Signature" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>Das optionale Signature Element wird für die Hinterlegung von Dokumentensignaturen verwendet. Handelt es sich um eine inline PDF Signatur, so wird der SignatureType INLINE verwendet. Handelt es sich um eine externe Signatur, so ist diese zusammen mit dem Type base64 codiert im Base64Signature Element zu hinterlegen und als SignatureType DETACHED zu waehlen.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                     <xs:sequence>
+                      <xs:element name="Base64Signature" minOccurs="0">
+                       <xs:complexType>
+                        <xs:simpleContent>
+                         <xs:extension base="xs:base64Binary">
+                          <xs:attribute name="Type" type="xs:anyURI"/>
+                         </xs:extension>
+                        </xs:simpleContent>
+                       </xs:complexType>
+                      </xs:element>
+                      <xs:element name="SignaturePolicyIdentifier" type="xs:anyURI"/>
+                     </xs:sequence>
+                     <xs:attribute name="SignatureType" use="required">
+                      <xs:annotation>
+                       <xs:documentation>Siganturtyp, also inlinePDF oder externe Signatur.</xs:documentation>
+                      </xs:annotation>
+                      <xs:simpleType>
+                       <xs:restriction base="xs:string">
+                        <xs:enumeration value="INLINE">
+                         <xs:annotation>
+                          <xs:documentation>Inline PDF Signatur</xs:documentation>
+                         </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="DETACHED">
+                         <xs:annotation>
+                          <xs:documentation>Externe Sigantur</xs:documentation>
+                         </xs:annotation>
+                        </xs:enumeration>
+                       </xs:restriction>
+                      </xs:simpleType>
+                     </xs:attribute>
+                    </xs:complexType>
+                   </xs:element>
+                  </xs:sequence>
+                 </xs:complexType>
+                </xs:element>
+                <xs:element name="Data" minOccurs="0">
+                 <xs:complexType>
+                  <xs:sequence>
+                   <xs:element name="Name">
+                    <xs:annotation>
+                     <xs:documentation>Bezeichnung des Dokuments</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                     <xs:restriction base="xs:string">
+                      <xs:maxLength value="128"/>
+                     </xs:restriction>
+                    </xs:simpleType>
+                   </xs:element>
+                   <xs:element name="Filename" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>Bezeichnung der uebermittelten Datei</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                     <xs:restriction base="xs:string">
+                      <xs:maxLength value="128"/>
+                     </xs:restriction>
+                    </xs:simpleType>
+                   </xs:element>
+                   <xs:element name="ContentType" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>Auch bezeichnet als Internet Media Type. Klassifikation der Daten im Content-Element</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                     <xs:restriction base="xs:string">
+                      <xs:maxLength value="128"/>
+                     </xs:restriction>
+                    </xs:simpleType>
+                   </xs:element>
+                   <xs:element name="Content" type="xs:base64Binary" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>Binaerdaten des Documents. Element ist optional, um Informationen ueber beizubringende Dokumente uebermitteln zu koennen, unabhaengig davon, ob fuer dieses bereits entsprechender Content vorliegt.</xs:documentation>
+                    </xs:annotation>
+                   </xs:element>
+                   <xs:element name="SchemaType" type="xs:anyURI" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>Falls XML oder sonstige Konvention geliefert wird, wird hier definiert, um welches Schema (xGewerbe, DATML/RAW) es sich handelt.</xs:documentation>
+                    </xs:annotation>
+                   </xs:element>
+                   <xs:element name="XMLRepresentation" type="xs:base64Binary" minOccurs="0">
+                    <xs:annotation>
+                     <xs:documentation>XML Repräsentation des Dokumenteninhaltes. Das Element ist optional, da nicht jedes Dokument zwangsweise über eine XML Datenrepräsentation verfügt.</xs:documentation>
+                    </xs:annotation>
+                   </xs:element>
+                  </xs:sequence>
+                 </xs:complexType>
+                </xs:element>
+               </xs:sequence>
+               <xs:attribute name="Id" use="required">
+                <xs:simpleType>
+                 <xs:restriction base="xs:string">
+                  <xs:maxLength value="36"/>
+                 </xs:restriction>
+                </xs:simpleType>
+               </xs:attribute>
+               <xs:attribute name="ExternalDocument" type="xs:boolean" use="optional">
+                <xs:annotation>
+                 <xs:documentation>Markierung, ob Dokument separat als Anhang mitgefuehrt wird oder inline in xFall über die Dokumenten-Elemente 'ContentType' und 'Content' zur Verfuegung gestellt wird</xs:documentation>
+                </xs:annotation>
+               </xs:attribute>
+              </xs:complexType>
+             </xs:element>
+            </xs:sequence>
+           </xs:complexType>
+          </xs:element>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+      </xs:sequence>
+      <xs:attribute name="Id" use="required">
+       <xs:simpleType>
+        <xs:restriction base="xs:string">
+         <xs:maxLength value="36"/>
+        </xs:restriction>
+       </xs:simpleType>
+      </xs:attribute>
+     </xs:complexType>
+    </xs:element>
+    <xs:element name="Message" minOccurs="0" maxOccurs="unbounded">
+     <xs:annotation>
+      <xs:documentation>Nachricht zum Fall</xs:documentation>
+     </xs:annotation>
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="SenderID">
+        <xs:annotation>
+         <xs:documentation>PartnerID des Senders der Nachricht</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:maxLength value="36"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="RecipientID">
+        <xs:annotation>
+         <xs:documentation>PartnerID des Empfaengers der Nachricht</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:maxLength value="36"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="Subject">
+        <xs:annotation>
+         <xs:documentation>Betreff</xs:documentation>
+        </xs:annotation>
+       </xs:element>
+       <xs:element name="Message" type="xs:string">
+        <xs:annotation>
+         <xs:documentation>Nachrichtentext</xs:documentation>
+        </xs:annotation>
+       </xs:element>
+       <xs:element name="PartialApplicationID" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+         <xs:documentation>Referenz auf bestehende AntragsIDs. Es wird davon ausgegangen, dass im empfangenden System die referenzierten PartialApplications bereits vorhanden sind.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+         <xs:restriction base="xs:string">
+          <xs:maxLength value="36"/>
+         </xs:restriction>
+        </xs:simpleType>
+       </xs:element>
+       <xs:element name="Document" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+         <xs:documentation>Dokumente, die in unterschiedllichen PartialApplications mehrfach verwendet werden, koennen hier global definiert werden. Vorteil: Aendert sich ein globales Dokument, muss es lediglich einmalig und nicht je PartialApplication ausgetauscht werden. Die Referenzierung des Documents-Elements der PartialApplication erfolgt durch das Setzten der DocumentID des globalen Dokuments im Element RefDocumentID. Der Dokumentenstatus wird je Antrag gepflegt, in dem ein globales Dokument verwendet wird</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="Header">
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="Task">
+              <xs:annotation>
+               <xs:documentation>Task-Element greift nur, wenn als Action "MAINAPPLICATION" oder "PARTIALAPPLICATION" uebergeben wurde. Das Task-Element markiert, wie mit dem Elementbereich zu verfahren ist: I = Insert, U = Update, D = Delete</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:enumeration value="I"/>
+                <xs:enumeration value="U"/>
+                <xs:enumeration value="D"/>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+             <xs:element name="Note" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Interne Anmerkung zum Document</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:maxLength value="1000"/>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+             <xs:element name="External" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Daten falls Dokumente im Anhang der Nachricht angehaengt werden</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+               <xs:sequence>
+                <xs:element name="HashAlgorithm"/>
+                <xs:element name="HashValue"/>
+               </xs:sequence>
+              </xs:complexType>
+             </xs:element>
+             <xs:element name="Signature" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Das optionale Signature Element wird für die Hinterlegung von Dokumentensignaturen verwendet. Handelt es sich um eine inline PDF Signatur, so wird der SignatureType INLINE verwendet. Handelt es sich um eine externe Signatur, so ist diese zusammen mit dem Type base64 codiert im Base64Signature Element zu hinterlegen und als SignatureType DETACHED zu waehlen.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+               <xs:sequence>
+                <xs:element name="Base64Signature" minOccurs="0">
+                 <xs:complexType>
+                  <xs:simpleContent>
+                   <xs:extension base="xs:base64Binary">
+                    <xs:attribute name="Type" type="xs:anyURI"/>
+                   </xs:extension>
+                  </xs:simpleContent>
+                 </xs:complexType>
+                </xs:element>
+                <xs:element name="SignaturePolicyIdentifier" type="xs:anyURI"/>
+               </xs:sequence>
+               <xs:attribute name="SignatureType" use="required">
+                <xs:annotation>
+                 <xs:documentation>Siganturtyp, also inlinePDF oder externe Signatur.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                 <xs:restriction base="xs:string">
+                  <xs:enumeration value="INLINE">
+                   <xs:annotation>
+                    <xs:documentation>Inline PDF Signatur</xs:documentation>
+                   </xs:annotation>
+                  </xs:enumeration>
+                  <xs:enumeration value="DETACHED">
+                   <xs:annotation>
+                    <xs:documentation>Externe Sigantur</xs:documentation>
+                   </xs:annotation>
+                  </xs:enumeration>
+                 </xs:restriction>
+                </xs:simpleType>
+               </xs:attribute>
+              </xs:complexType>
+             </xs:element>
+            </xs:sequence>
+           </xs:complexType>
+          </xs:element>
+          <xs:element name="Data">
+           <xs:complexType>
+            <xs:sequence>
+             <xs:element name="Name">
+              <xs:annotation>
+               <xs:documentation>Bezeichnung des Dokuments</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:maxLength value="128"/>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+             <xs:element name="Filename" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Bezeichnung der uebermittelten Datei</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:maxLength value="128"/>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+             <xs:element name="ContentType" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Auch bezeichnet als Internet Media Type. Klassifikation der Daten im Content-Element</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+               <xs:restriction base="xs:string">
+                <xs:maxLength value="128"/>
+               </xs:restriction>
+              </xs:simpleType>
+             </xs:element>
+             <xs:element name="Content" type="xs:base64Binary" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Binaerdaten des Documents. Element ist optional, um Informationen ueber beizubringende Dokumente uebermitteln zu koennen, unabhaengig davon, ob fuer dieses bereits entsprechender Content vorliegt.</xs:documentation>
+              </xs:annotation>
+             </xs:element>
+             <xs:element name="SchemaType" type="xs:anyURI" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>Falls XML oder sonstige Konvention geliefert wird, wird hier definiert, um welches Schema (xGewerbe, DATML/RAW) es sich handelt.</xs:documentation>
+              </xs:annotation>
+             </xs:element>
+             <xs:element name="XMLRepresentation" type="xs:base64Binary" minOccurs="0">
+              <xs:annotation>
+               <xs:documentation>XML Repräsentation des Dokumenteninhaltes. Das Element ist optional, da nicht jedes Dokument zwangsweise über eine XML Datenrepräsentation verfügt.</xs:documentation>
+              </xs:annotation>
+             </xs:element>
+            </xs:sequence>
+           </xs:complexType>
+          </xs:element>
+         </xs:sequence>
+         <xs:attribute name="Id" use="required">
+          <xs:annotation>
+           <xs:documentation>Primaerschluessel des Dokuments</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+           <xs:restriction base="xs:string">
+            <xs:maxLength value="36"/>
+           </xs:restriction>
+          </xs:simpleType>
+         </xs:attribute>
+         <xs:attribute name="ExternalDocument" type="xs:boolean" use="required">
+          <xs:annotation>
+           <xs:documentation>Markierung, ob Dokument separat als Anhang mitgefuehrt wird oder inline in xFall über die Dokumenten-Elemente 'ContentType' und 'Content' zur Verfuegung gestellt wird</xs:documentation>
+          </xs:annotation>
+         </xs:attribute>
+         <xs:attribute name="ExternalDocumentId" type="xs:string"/>
+        </xs:complexType>
+       </xs:element>
+      </xs:sequence>
+     </xs:complexType>
+    </xs:element>
+    <xs:element name="Errors" minOccurs="0">
+     <xs:annotation>
+      <xs:documentation>Rahmenelement fuer Fehler</xs:documentation>
+     </xs:annotation>
+     <xs:complexType>
+      <xs:sequence>
+       <xs:element name="Error" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+         <xs:documentation>Fehler</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+         <xs:sequence>
+          <xs:element name="ErrorCode">
+           <xs:annotation>
+            <xs:documentation>Fehlercode</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="256"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="ErrorText">
+           <xs:annotation>
+            <xs:documentation>Fehlertext</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="1024"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="ObjectType" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Objekt in dem der Fehler aufgetreten ist.</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:enumeration value="MAINAPPLICATION">
+              <xs:annotation>
+               <xs:documentation>Im Objekt 'MainApplication' (Fall) ist ein Fehler aufgetreten</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="PARTIALAPPLICATION">
+              <xs:annotation>
+               <xs:documentation>Im Objekt 'PartialApplication' (Antrag) ist ein Fehler aufgetreten</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="PARTNER">
+              <xs:annotation>
+               <xs:documentation>Im Objekt 'Partner' ist ein Fehler aufgetreten</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="DOCUMENT">
+              <xs:annotation>
+               <xs:documentation>Im Objekt 'Document' (Dokument) ist ein Fehler aufgetreten</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="MESSAGE">
+              <xs:annotation>
+               <xs:documentation>Im Objekt 'Message' (Nachricht) ist ein Fehler aufgetreten</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+             <xs:enumeration value="OFFICIALLETTER">
+              <xs:annotation>
+               <xs:documentation>Im Objekt 'OfficialLetter' (Bescheid) ist ein Fehler aufgetreten</xs:documentation>
+              </xs:annotation>
+             </xs:enumeration>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+          <xs:element name="ObjectTypeID" minOccurs="0">
+           <xs:annotation>
+            <xs:documentation>Primaerschluessel des Objekts in der der Fehler aufgetreten ist</xs:documentation>
+           </xs:annotation>
+           <xs:simpleType>
+            <xs:restriction base="xs:string">
+             <xs:maxLength value="36"/>
+            </xs:restriction>
+           </xs:simpleType>
+          </xs:element>
+         </xs:sequence>
+        </xs:complexType>
+       </xs:element>
+      </xs:sequence>
+     </xs:complexType>
+    </xs:element>
+   </xs:sequence>
+   <xs:attribute name="Id" use="required">
+    <xs:simpleType>
+     <xs:restriction base="xs:string">
+      <xs:maxLength value="36"/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:attribute>
+  </xs:complexType>
+ </xs:element>
+</xs:schema>

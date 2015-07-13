@@ -89,15 +89,30 @@ class Request < MainApplication
     self.partial_application_data = pa_data
   end
 
+  def ksBild
+    document.each do |doc|
+      data = doc.try(:data)
+      return data.content if data && data.contentType == "image/jpeg" && !data.content.blank?
+    end
+
+  end
+
+  def ksCustomData
+    partialApplication.each do |pa|
+      return pa.data.customData
+    end
+  end
+
   def backend_create_params
     {
       resultObjectOnSubmit: true,
       betreff: data.name,
       details: data.description,
       autorEmail: authorEmail,
-      typ: "problem", # problem ODER idee
-      kategorie: 28, # 28 = Sondermüll
-      positionWGS84: "POINT (54.186667 12.086539)",
+      typ: ksCustomData.type, # problem ODER idee
+      kategorie: ksCustomData.category, # 28 = Sondermüll
+      positionWGS84: "POINT (#{ ksCustomData.latitude } #{ ksCustomData.longitude })",
+      bild: ksBild
     }
   end
 

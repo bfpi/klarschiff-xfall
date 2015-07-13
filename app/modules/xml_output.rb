@@ -21,18 +21,29 @@ module XmlOutput
   private
   def self.writeChildren(xml, obj)
     obj.instance_values.each do |name, value|
-      unless value.blank? || name.starts_with?("_")
-        if value.is_a? String
-          xml.send(name.camelize, value)
-        elsif value.is_a? Array
-          value.each do |el|
-            xml.send(name.camelize, getAttributes(el)) do
-              writeChildren xml, el
-            end
+      if name == "customData"
+        customData = Nokogiri::XML::Builder.new do |cdXml|
+          cdXml.CustomData do |ma|
+            writeChildren cdXml, value
           end
-        else
-          xml.send(name.camelize, getAttributes(value)) do
-            writeChildren xml, value
+        end
+
+        xmlString = customData.to_xml(indent: 0).gsub("\n", "")
+        xml.send(name, Base64.encode64(xmlString).gsub("\n", ""))
+      else
+        unless value.blank? || name.starts_with?("_")
+          if value.is_a? String
+            xml.send(name.camelize, value)
+          elsif value.is_a? Array
+            value.each do |el|
+              xml.send(name.camelize, getAttributes(el)) do
+                writeChildren xml, el
+              end
+            end
+          else
+            xml.send(name.camelize, getAttributes(value)) do
+              writeChildren xml, value
+            end
           end
         end
       end

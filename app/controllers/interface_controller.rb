@@ -5,7 +5,7 @@ class InterfaceController < ApplicationController
   def index
     xmlContent = Nokogiri.parse File.read("tmp/Fall-Insert.xml")
 
-    schema = Nokogiri::XML::Schema(File.read("tmp/xFall2.0.xsd"))
+    schema = Nokogiri::XML::Schema(File.read("app/xsd/x_fall-2.0.xsd"))
     return render :text => "XML invalid" unless schema.valid?(xmlContent)
 
     request = XmlInput.new(xmlContent)
