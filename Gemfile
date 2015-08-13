@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.0'
+gem 'rails', '~>4.2.0'
 
 gem 'passenger'
-gem 'soap2r', github: 'felipec/soap4r'
+gem 'soap2r', git: 'https://github.com/felipec/soap4r.git'
