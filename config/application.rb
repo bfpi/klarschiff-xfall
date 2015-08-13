@@ -28,5 +28,7 @@ module KlarschiffXFall
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.autoload_paths += %W(#{config.root}/app/models/xsd)
     config.i18n.default_locale = :de
+
+    config.action_dispatch.default_headers.merge!({ 'Access-Control-Allow-Origin' => '*' })
   end
 end

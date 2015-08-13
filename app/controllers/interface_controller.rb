@@ -3,10 +3,17 @@ class InterfaceController < ApplicationController
   require 'nokogiri'
 
   def index
-    xmlContent = Nokogiri.parse File.read("tmp/Fall-Insert.xml")
+    return render text: "Kein XML übergeben" if request.raw_post.blank?
 
-    schema = Nokogiri::XML::Schema(File.read("app/xsd/x_fall-2.0.xsd"))
-    return render :text => "XML invalid" unless schema.valid?(xmlContent)
+    begin
+      xmlContent =  Nokogiri::XML::Document.parse(request.raw_post)
+
+      schema = Nokogiri::XML::Schema(File.read("app/xsd/x_fall-2.0.xsd"))
+      return render :text => "XML entspricht nicht der XSD" unless schema.valid?(xmlContent)
+    rescue Exception => e
+      p e.inspect
+      return render :text => "XML invalid"
+    end
 
     request = XmlInput.new(xmlContent)
 
