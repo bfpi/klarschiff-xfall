@@ -2,8 +2,7 @@ class Request < MainApplication
   include ActiveModel::Model
 
   def data
-    @data = Request::C_Data.new if @data.nil?
-    @data
+    @data ||= Request::C_Data.new
   end
 
   def id
@@ -14,11 +13,7 @@ class Request < MainApplication
     __xmlattr["request"] = { "Id": value }
   end
 
-  def betreff=(value)
-    data.name = value
-  end
-
-  def details=(value)
+  def beschreibung=(value)
     data.description = value
   end
 
@@ -106,8 +101,7 @@ class Request < MainApplication
   def backend_create_params
     {
       resultObjectOnSubmit: true,
-      betreff: data.name,
-      details: data.description,
+      beschreibung: data.description,
       autorEmail: authorEmail,
       typ: ksCustomData.type, # problem ODER idee
       kategorie: ksCustomData.category, # 28 = Sondermüll
